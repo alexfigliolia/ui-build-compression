@@ -8,7 +8,7 @@ readme = "README.md"
 
 [[bin]]
 name = "ui-build-compression"
-path = "src/main.rs"
+path = "internals/main.rs"
 
 [dependencies]
 brotli = "8.0.2"

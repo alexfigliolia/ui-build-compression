@@ -1,0 +1,55 @@
+{
+  "name": "ui-build-compression",
+  "version": "1.0.0",
+  "description": "Build compression for production UI's powered by rust",
+  "keywords": [
+    "brotli",
+    "build",
+    "compression",
+    "deflate",
+    "frontend",
+    "gzip",
+    "production",
+    "rust",
+    "zstandard"
+  ],
+  "homepage": "https://github.com/alexfigliolia/ui-build-compression#readme",
+  "bugs": {
+    "url": "https://github.com/alexfigliolia/ui-build-compression/issues"
+  },
+  "license": "MIT",
+  "author": "Alex Figliolia",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexfigliolia/ui-build-compression.git"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "scripts": {
+    "build": "ts-packager -e externals",
+    "build:rust": "cargo build --release",
+    "lint:rust": "cargo clippy --fix --allow-dirty",
+    "lint:ts": "yarn oxlint --type-aware --type-check --report-unused-disable-directives --fix && yarn oxfmt",
+    "postinstall": "chmod +x ./install.sh && ./install.sh",
+    "run:dev": "cargo run --package ui-build-compression --bin ui-build-compression"
+  },
+  "dependencies": {
+    "@figliolia/child-process": "^1.0.4",
+    "@figliolia/ts-packager": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.0",
+    "oxfmt": "^0.27.0",
+    "oxlint": "^1.42.0",
+    "oxlint-tsgolint": "^0.11.4",
+    "typescript": "^5.9.3"
+  }
+}
