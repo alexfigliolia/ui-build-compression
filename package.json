@@ -1,6 +1,6 @@
 {
   "name": "ui-build-compression",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Build compression for production UI's powered by rust",
   "keywords": [
     "brotli",
@@ -28,9 +28,9 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
       "import": "./dist/mjs/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "scripts": {
@@ -42,10 +42,10 @@
     "run:dev": "cargo run --package ui-build-compression --bin ui-build-compression"
   },
   "dependencies": {
-    "@figliolia/child-process": "^1.0.4",
-    "@figliolia/ts-packager": "^1.2.1"
+    "@figliolia/child-process": "^1.0.4"
   },
   "devDependencies": {
+    "@figliolia/ts-packager": "^1.2.4",
     "@types/node": "^25.2.0",
     "oxfmt": "^0.27.0",
     "oxlint": "^1.42.0",
