@@ -1,0 +1,107 @@
+use std::{
+    fs::File,
+    io::{BufReader, Read, Write, copy},
+    path::{Path, PathBuf},
+};
+
+use brotli::CompressorWriter;
+use flate2::{
+    Compression,
+    write::{DeflateEncoder, GzEncoder},
+};
+use jwalk::WalkDir;
+
+use crate::{concurrency::thread_pool::ThreadPool, logger::logger::Logger};
+
+pub struct Compressor {
+    directory: String,
+}
+
+impl Compressor {
+    pub fn new(directory: String) -> Compressor {
+        Compressor { directory }
+    }
+
+    pub async fn compress(&self) {
+        let path = Path::new(&self.directory);
+        if !path.is_absolute() || !path.exists() {
+            Logger::exit_with_info("Please specify an absolute path to a directory");
+        }
+        Logger::info(format!("Compressing {}", self.directory).as_str());
+        let mut count = 0;
+        let mut pool = ThreadPool::new(None, None);
+        for entry in WalkDir::new(path).into_iter().filter_map(|e| {
+            if e.is_err() {
+                return None;
+            }
+            let option = e.ok();
+            option.filter(|file| file.file_type().is_file())
+        }) {
+            let tasks: [(PathBuf, fn(&PathBuf)); 4] = [
+                (entry.path(), Compressor::compress_brotli),
+                (entry.path(), Compressor::compress_deflate),
+                (entry.path(), Compressor::compress_gzip),
+                (entry.path(), Compressor::compress_zstd),
+            ];
+            for (path, compression) in tasks {
+                pool.spawn(move || compression(&path)).await.unwrap();
+            }
+            count += 1;
+        }
+        pool.pool.shutdown_background();
+        Logger::info(
+            format!(
+                "Finished! Compressed {} files",
+                Logger::green(count.to_string().as_str())
+            )
+            .as_str(),
+        );
+    }
+
+    fn compress_zstd(path: &PathBuf) {
+        let mut output_file =
+            File::create(format!("{}.zstd", path.to_str().expect("str"))).expect("will exist");
+        let mut encoder = zstd::stream::Encoder::new(&mut output_file, 0).expect("created");
+        copy(&mut Compressor::input_file(path), &mut encoder).expect("copy complete");
+        encoder.finish().expect("done");
+    }
+
+    fn compress_brotli(path: &PathBuf) {
+        let mut encoder = CompressorWriter::new(Compressor::output_file(path, ".br"), 4096, 11, 22);
+        copy(&mut Compressor::input_file(path), &mut encoder).expect("copy complete");
+        encoder.flush().expect("done");
+    }
+
+    fn compress_gzip(path: &PathBuf) {
+        let mut input = Compressor::input_file(path);
+        let mut reader = BufReader::new(&mut input);
+        let mut encoder = GzEncoder::new(Compressor::output_file(path, ".gz"), Compression::new(9));
+        copy(&mut reader, &mut encoder).expect("copy complete");
+        encoder.finish().expect("done");
+    }
+
+    fn compress_deflate(path: &PathBuf) {
+        let mut input = Compressor::input_file(path);
+        let mut buffer = Vec::new();
+        input.read_to_end(&mut buffer).expect("done");
+        let mut encoder = DeflateEncoder::new(
+            Compressor::output_file(path, ".deflate"),
+            Compression::default(),
+        );
+        encoder.write_all(&buffer).expect("done");
+        encoder.finish().expect("done");
+    }
+
+    fn input_file(path: &PathBuf) -> File {
+        File::open(path).expect("exists")
+    }
+
+    fn output_file(path: &PathBuf, extension: &str) -> File {
+        let path_string = path.to_str().expect("str");
+        let output = File::create(format!("{}{extension}", path_string));
+        if output.is_err() {
+            panic!("Failed to create file at: \n\n\t{}", path_string)
+        }
+        output.expect("created")
+    }
+}
