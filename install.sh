@@ -13,6 +13,7 @@ if command_exists rustc && command_exists cargo; then
 else
     echo "Installing rust"
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    . "$HOME/.cargo/env"
 fi
 
 echo "Installing UI Build Compression"

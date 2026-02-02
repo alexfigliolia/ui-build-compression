@@ -1,6 +1,6 @@
 {
   "name": "ui-build-compression",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Build compression for production UI's powered by rust",
   "keywords": [
     "brotli",
