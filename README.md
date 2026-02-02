@@ -1,3 +1,5 @@
+<img src="media/ui-build-compression.webp" alt="Alt text" width="150px" />
+
 ## UI Build Compressor
 
 Static file compression for UI builds powered by rust.
