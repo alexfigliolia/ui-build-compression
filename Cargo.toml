@@ -16,5 +16,5 @@ colored = "3.1.1"
 flate2 = "1.1.8"
 futures = "0.3.31"
 jwalk = "0.8.1"
-tokio = { version = "1.49.0", features = ["rt-multi-thread"] }
+tokio = { version = "1.49.0", features = ["rt-multi-thread", "sync"] }
 zstd = "0.13.3"

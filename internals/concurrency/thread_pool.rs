@@ -1,23 +1,44 @@
+use std::sync::Arc;
+
 use tokio::{
     runtime::{self, Runtime},
+    sync::Semaphore,
     task::JoinHandle,
 };
 
 pub struct ThreadPool {
     pub pool: Runtime,
+    semaphore: Arc<Semaphore>,
 }
 
 impl ThreadPool {
-    pub fn new(threads_override: Option<usize>, pool_override: Option<Runtime>) -> ThreadPool {
+    pub fn new(
+        concurrency: Option<usize>,
+        threads_override: Option<usize>,
+        pool_override: Option<Runtime>,
+    ) -> ThreadPool {
         let pool = pool_override.unwrap_or(ThreadPool::create_pool(threads_override));
-        ThreadPool { pool }
+        let max_concurrency = concurrency.unwrap_or(Semaphore::MAX_PERMITS);
+        let semaphore = Arc::new(Semaphore::new(max_concurrency));
+        ThreadPool { pool, semaphore }
     }
 
     pub fn spawn<T: Send + 'static, F: (Fn() -> T) + 'static + Send>(
         &mut self,
         task: F,
     ) -> JoinHandle<T> {
-        self.pool.spawn(async move { task() })
+        let concurrecy = self.semaphore.clone();
+        self.pool.spawn(async move {
+            let _ticket = concurrecy.acquire().await.unwrap();
+            task()
+        })
+    }
+
+    pub fn spawn_blocking<T: Send + 'static, F: (Fn() -> T) + 'static + Send>(
+        &mut self,
+        task: F,
+    ) -> JoinHandle<T> {
+        self.pool.spawn_blocking(task)
     }
 
     fn create_pool(threads: Option<usize>) -> Runtime {

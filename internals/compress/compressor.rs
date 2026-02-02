@@ -9,6 +9,7 @@ use flate2::{
     Compression,
     write::{DeflateEncoder, GzEncoder},
 };
+use futures::{TryStreamExt, stream::FuturesUnordered};
 use jwalk::WalkDir;
 
 use crate::{concurrency::thread_pool::ThreadPool, logger::logger::Logger};
@@ -28,8 +29,10 @@ impl Compressor {
             Logger::exit_with_info("Please specify an absolute path to a directory");
         }
         Logger::info(format!("Compressing {}", self.directory).as_str());
-        let mut count = 0;
-        let mut pool = ThreadPool::new(None, None);
+        let mut total = 0;
+        let mut compressed = 0;
+        let mut futures = FuturesUnordered::new();
+        let mut pool = ThreadPool::new(None, None, None);
         for entry in WalkDir::new(path).into_iter().filter_map(|e| {
             if e.is_err() {
                 return None;
@@ -37,25 +40,45 @@ impl Compressor {
             let option = e.ok();
             option.filter(|file| file.file_type().is_file())
         }) {
-            let tasks: [(PathBuf, fn(&PathBuf)); 4] = [
-                (entry.path(), Compressor::compress_brotli),
-                (entry.path(), Compressor::compress_deflate),
-                (entry.path(), Compressor::compress_gzip),
-                (entry.path(), Compressor::compress_zstd),
-            ];
-            for (path, compression) in tasks {
-                pool.spawn(move || compression(&path)).await.unwrap();
-            }
-            count += 1;
+            total += 1;
+            self.progress(total, compressed);
+            futures.push(pool.spawn_blocking(move || {
+                let tasks: [(PathBuf, fn(&PathBuf)); 4] = [
+                    (entry.path(), Compressor::compress_brotli),
+                    (entry.path(), Compressor::compress_deflate),
+                    (entry.path(), Compressor::compress_gzip),
+                    (entry.path(), Compressor::compress_zstd),
+                ];
+                tasks.map(|(path, task)| task(&path))
+            }));
+        }
+        while let Ok(Some(_)) = futures.try_next().await {
+            compressed += 1;
+            self.progress(total, compressed);
         }
         pool.pool.shutdown_background();
         Logger::info(
             format!(
                 "Finished! Compressed {} files",
-                Logger::green(count.to_string().as_str())
+                Logger::green(total.to_string().as_str())
             )
             .as_str(),
         );
+    }
+
+    fn progress(&self, total: i32, compressed: i32) {
+        let percentage = (compressed * 100) / total;
+        let max_bars = 25;
+        let filled_bars = (compressed * max_bars) / total;
+        let remaining = max_bars - filled_bars;
+        print!(
+            "\rCompressing [{}{}] {percentage}%",
+            "=".repeat(filled_bars as usize),
+            " ".repeat(remaining as usize)
+        );
+        if percentage == 100 {
+            println!();
+        }
     }
 
     fn compress_zstd(path: &PathBuf) {
