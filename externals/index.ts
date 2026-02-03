@@ -7,6 +7,6 @@ import { ChildProcess } from "@figliolia/child-process";
  * zstandard, deflate, and brotli file variants for all
  * files recursively
  */
-export const compress = async (directory: string) => {
+export const compress = (directory: string) => {
   return new ChildProcess(`ui-build-compression ${directory}`).handler;
 };
