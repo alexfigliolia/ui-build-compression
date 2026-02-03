@@ -402,8 +402,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "ui-build-compression"
+name = "tokio-thread-pool"
 version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d94c3392b98a14acc18fa639cb48e94355ed7aaae4a45164e394d6c4da39c9ec"
+dependencies = [
+ "tokio",
+]
+
+[[package]]
+name = "ui-build-compression"
+version = "1.0.1"
 dependencies = [
  "brotli",
  "colored",
@@ -411,6 +420,7 @@ dependencies = [
  "futures",
  "jwalk",
  "tokio",
+ "tokio-thread-pool",
  "zstd",
 ]
 

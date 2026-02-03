@@ -11,8 +11,9 @@ use flate2::{
 };
 use futures::{TryStreamExt, stream::FuturesUnordered};
 use jwalk::WalkDir;
+use tokio_thread_pool::ThreadPool;
 
-use crate::{concurrency::thread_pool::ThreadPool, logger::logger::Logger};
+use crate::logger::logger::Logger;
 
 pub struct Compressor {
     directory: String,

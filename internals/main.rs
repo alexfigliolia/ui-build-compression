@@ -5,7 +5,6 @@ use futures::executor;
 use crate::{compress::compressor::Compressor, logger::logger::Logger};
 
 mod compress;
-mod concurrency;
 mod logger;
 
 fn main() {
