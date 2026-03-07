@@ -17,7 +17,9 @@
       ["internal", "type-internal"],
       ["parent", "type-parent"],
       ["sibling", "type-sibling"],
-      ["index", "type-index"]
+      ["index", "type-index"],
+      ["side_effect"],
+      ["side_effect_style"]
     ]
   },
   "experimentalSortPackageJson": {
