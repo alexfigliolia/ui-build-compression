@@ -1,6 +1,10 @@
-set -e 
+CWD=$(pwd)
 
-REPO_ROOT=$(git rev-parse --show-toplevel)
+REPLACEMENT="/node_modules"
+FALLBACK_ROOT="${CWD%${REPLACEMENT}*}"
+
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+REPO_ROOT=${GIT_ROOT:-$FALLBACK_ROOT}
 
 cd $REPO_ROOT
 
