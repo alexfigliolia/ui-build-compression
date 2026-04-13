@@ -66,6 +66,11 @@
   resolved "https://registry.yarnpkg.com/@figliolia/child-process/-/child-process-1.0.4.tgz#5337c847f43a08ff9e1124793fa650f746515da5"
   integrity sha512-midiGoIu0pO9q+T607iYFSsEFSg6XlWJ7REaGcX/mCuxgrr8hudGSPz4OzyXznVUlp1UwaVTjfgYHlSUxuaJXg==
 
+"@figliolia/semver@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@figliolia/semver/-/semver-1.0.0.tgz#bc2be6f79b7de8fc1c18e1c3c3bc312f785e51b8"
+  integrity sha512-8+HBxSsbdvfFJKvSwKRGdeq6dV5BjoMGu7AQEooXFnUXGedgvnIxAgolnykGMUcF5hBC6hQB0a9FZuq79HYOgw==
+
 "@jridgewell/gen-mapping@^0.3.12":
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz#6342a19f44347518c93e43b1ac69deb3c4656a1f"

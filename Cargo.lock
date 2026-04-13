@@ -412,7 +412,7 @@ dependencies = [
 
 [[package]]
 name = "ui-build-compression"
-version = "1.0.1"
+version = "1.1.1"
 dependencies = [
  "brotli",
  "colored",

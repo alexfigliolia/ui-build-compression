@@ -3,7 +3,6 @@ use futures::executor;
 use crate::compress::compressor::Compressor;
 
 mod compress;
-mod concurrency;
 mod logger;
 
 /// Recursively compresses all files in the specified directory using gzip, brotli, deflate, and zstandard.
