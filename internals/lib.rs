@@ -15,7 +15,6 @@ mod logger;
 /// # Examples
 ///
 /// ```
-/// // Code in documentation blocks is compiled and run as a test by rustdoc.
 /// use ui_build_compression::compress;
 ///
 /// compress("/path/to/my/directory");
