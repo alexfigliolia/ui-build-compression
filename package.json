@@ -1,6 +1,6 @@
 {
   "name": "ui-build-compression",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Build compression for production UI's powered by rust",
   "keywords": [
     "brotli",
@@ -33,6 +33,15 @@
     },
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist",
+    "media",
+    "internals",
+    "externals",
+    "Cargo.lock",
+    "Cargo.toml",
+    "install.sh"
+  ],
   "scripts": {
     "build:rust": "cargo build --release",
     "build:ts": "tsdown",

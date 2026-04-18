@@ -6,7 +6,9 @@ FALLBACK_ROOT="${CWD%${REPLACEMENT}*}"
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 REPO_ROOT=${GIT_ROOT:-$FALLBACK_ROOT}
 
-cd $REPO_ROOT
+if [[ "$CWD" != *"$REPLACEMENT"* ]]; then
+    exit 0;
+fi
 
 command_exists() {
     command -v "$1"
@@ -22,4 +24,6 @@ fi
 
 echo "Installing UI Build Compression"
 
-cargo install ui-build-compression
+. "$HOME/.cargo/env"
+RUSTFLAGS="-Awarnings" cargo build --release
+cargo install --path .
