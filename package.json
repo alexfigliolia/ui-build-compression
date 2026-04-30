@@ -33,7 +33,7 @@
   },
   "scripts": {
     "artifacts": "pnpm artifacts:js && pnpm artifacts:native",
-    "artifacts:js": "for f in artifacts/index*; do mv -f $f ${f##*/}; done",
+    "artifacts:js": "for f in dist/index*; do mv -f $f ${f##*/}; done",
     "artifacts:native": "napi artifacts",
     "build": "pnpm build:debug --release",
     "build:cli": "pnpm build:rust && pnpm install:rust",

@@ -8,11 +8,30 @@ Creates gzip, brotli, zstd, and deflate compressed file variants along side orig
 
 Each algorithm is configured for the most aggressive compression settings available
 
-### API
+1. [Installation](#installation)
+2. [Rust API](#rust-api)
+3. [JavaScript API](#javascript-api)
+4. [Command Line](#command-line)
 
-#### Programmatic
+## Installation
 
-##### Rust
+#### JavaScript/TypeScript
+
+```bash
+npm i -D @ui-perf/build-compression
+yarn add -D @ui-perf/build-compression
+pnpm add -D @ui-perf/build-compression
+```
+
+#### Rust
+
+```bash
+cargo add ui-build-compression
+# or
+cargo install ui-build-compression
+```
+
+### Rust API
 
 ```rust
 // cargo add ui-build-compression
@@ -22,18 +41,17 @@ use ui_build_compression::compress;
 compress("/path/to/my/directory");
 ```
 
-##### Javascript/Typescript
+### JavaScript API
 
 ```typescript
-// yarn add ui-build-compression
+import { compress } from "@ui-perf/build-compression";
 
-import { compress } from "ui-build-compression";
-
-void compress("/path/to/my/directory");
+compress("/path/to/my/directory");
 ```
 
 #### Command Line
 
 ```bash
+# cargo install ui-build-compression
 ui-build-compression /path/to/my/directory
 ```
