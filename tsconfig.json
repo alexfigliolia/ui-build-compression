@@ -1,21 +1,10 @@
 {
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "module": "nodenext",
-    "target": "esnext",
-    "lib": ["ESNext"],
-    "moduleResolution": "nodenext",
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "strict": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true
-  }
+    "declaration": true,
+    "types": ["node"],
+    "esModuleInterop": true
+  },
+  "exclude": ["dist", "node_modules", "target", "fixtures"]
 }
