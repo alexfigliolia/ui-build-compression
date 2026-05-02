@@ -4,7 +4,7 @@ version = "1.1.5"
 edition = "2024"
 description = "A compressor for static files producing gzip, brotli, deflate, and zstdandard file variants"
 license = "MIT"
-readme = "README.md"
+readme = "../../README.md"
 
 [[bin]]
 name = "ui-build-compression"
