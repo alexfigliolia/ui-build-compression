@@ -20,5 +20,5 @@ mod logger;
 /// compress("/path/to/my/directory");
 /// ```
 pub fn compress(directory: &str) {
-    executor::block_on(Compressor::new(directory.to_string()).compress());
+    executor::block_on(Compressor::new(directory).compress());
 }
