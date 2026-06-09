@@ -16,20 +16,20 @@ use tokio_thread_pool::ThreadPool;
 use crate::logger::logger::Logger;
 
 pub struct Compressor {
-    directory: String,
+    target: String,
 }
 
 impl Compressor {
-    pub fn new(directory: String) -> Compressor {
-        Compressor { directory }
+    pub fn new(target: String) -> Compressor {
+        Compressor { target }
     }
 
     pub async fn compress(&self) {
-        let path = Path::new(&self.directory);
+        let path = Path::new(&self.target);
         if !path.is_absolute() || !path.exists() {
-            Logger::exit_with_info("Please specify an absolute path to a directory");
+            Logger::exit_with_info("Please specify an absolute path to a file or directory");
         }
-        Logger::info(format!("Compressing {}", self.directory).as_str());
+        Logger::info(format!("Compressing {}", self.target).as_str());
         let mut total = 0;
         let mut compressed = 0;
         let mut futures = FuturesUnordered::new();
@@ -44,13 +44,13 @@ impl Compressor {
             total += 1;
             self.progress(total, compressed);
             futures.push(pool.spawn_blocking(move || {
-                let tasks: [(PathBuf, fn(&PathBuf)); 4] = [
-                    (entry.path(), Compressor::compress_brotli),
-                    (entry.path(), Compressor::compress_deflate),
-                    (entry.path(), Compressor::compress_gzip),
-                    (entry.path(), Compressor::compress_zstd),
+                let tasks: [fn(&PathBuf); 4] = [
+                    Compressor::compress_brotli,
+                    Compressor::compress_deflate,
+                    Compressor::compress_gzip,
+                    Compressor::compress_zstd,
                 ];
-                tasks.map(|(path, task)| task(&path))
+                tasks.map(|task| task(&entry.path()))
             }));
         }
         while let Ok(Some(_)) = futures.try_next().await {
@@ -85,7 +85,7 @@ impl Compressor {
     fn compress_zstd(path: &PathBuf) {
         let mut output_file =
             File::create(format!("{}.zstd", path.to_str().expect("str"))).expect("will exist");
-        let mut encoder = zstd::stream::Encoder::new(&mut output_file, 0).expect("created");
+        let mut encoder = zstd::stream::Encoder::new(&mut output_file, 22).expect("created");
         copy(&mut Compressor::input_file(path), &mut encoder).expect("copy complete");
         encoder.finish().expect("done");
     }
@@ -110,7 +110,7 @@ impl Compressor {
         input.read_to_end(&mut buffer).expect("done");
         let mut encoder = DeflateEncoder::new(
             Compressor::output_file(path, ".deflate"),
-            Compression::default(),
+            Compression::best(),
         );
         encoder.write_all(&buffer).expect("done");
         encoder.finish().expect("done");

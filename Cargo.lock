@@ -25,7 +25,7 @@ dependencies = [
 
 [[package]]
 name = "bindings"
-version = "1.1.5"
+version = "2.0.0"
 dependencies = [
  "napi",
  "napi-build",
@@ -521,7 +521,7 @@ dependencies = [
 
 [[package]]
 name = "ui-build-compression"
-version = "1.1.5"
+version = "2.0.0"
 dependencies = [
  "brotli",
  "colored",

@@ -46,7 +46,7 @@ compress("/path/to/my/directory");
 ```typescript
 import { compress } from "@ui-perf/build-compression";
 
-compress("/path/to/my/directory");
+await compress("/path/to/my/directory");
 ```
 
 #### Command Line

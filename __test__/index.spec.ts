@@ -10,16 +10,16 @@ import { compress } from "../dist";
 const FIXTURE_PATH = join(cwd(), "fixture");
 const TARGET_FIXTURE_PATH = join(cwd(), "__test__", "fixture");
 
-test.beforeEach(async () => {
+test.before(async () => {
   await cp(FIXTURE_PATH, TARGET_FIXTURE_PATH, { recursive: true, force: true });
 });
 
-test.afterEach(async () => {
+test.after(async () => {
   await rm(TARGET_FIXTURE_PATH, { force: true, recursive: true });
 });
 
 test("Test compression", async t => {
-  compress(TARGET_FIXTURE_PATH);
+  await compress(TARGET_FIXTURE_PATH);
   const variants = ["br", "gz", "zstd", "deflate"];
   const entries = await readdir(FIXTURE_PATH, {
     withFileTypes: true,
@@ -41,4 +41,10 @@ test("Test compression", async t => {
       }
     }
   }
+});
+
+[join(cwd(), "path/to/nowhere")].forEach(path => {
+  test(`Invalid Path: ${path}`, async t => {
+    await t.throwsAsync(() => compress(path));
+  });
 });

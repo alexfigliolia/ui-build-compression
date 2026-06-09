@@ -12,7 +12,7 @@ mod logger;
 /// #### Arguments
 /// * `directory` - An absolute path to a directory to compress
 ///
-/// # Examples
+/// #### Examples
 ///
 /// ```
 /// use ui_build_compression::compress;
