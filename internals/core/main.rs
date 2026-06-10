@@ -12,6 +12,5 @@ fn main() {
     if argv.len() < 2 {
         Logger::exit_with_info("Please specify an absolute path to a directory");
     }
-    let path = &argv[1];
-    executor::block_on(Compressor::new(path.clone()).compress());
+    executor::block_on(Compressor::new(&argv[1]).compress());
 }

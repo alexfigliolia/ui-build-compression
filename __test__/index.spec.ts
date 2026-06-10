@@ -20,7 +20,7 @@ test.after(async () => {
 
 test("Test compression", async t => {
   await compress(TARGET_FIXTURE_PATH);
-  const variants = ["br", "gz", "zstd", "deflate"];
+  const variants = ["br", "gz", "zst", "deflate"];
   const entries = await readdir(FIXTURE_PATH, {
     withFileTypes: true,
     recursive: true,
