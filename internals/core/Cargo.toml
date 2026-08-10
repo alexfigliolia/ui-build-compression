@@ -1,6 +1,6 @@
 [package]
 name = "ui-build-compression"
-version = "2.0.0"
+version = "2.0.1"
 edition = "2024"
 description = "A compressor for static files producing gzip, brotli, deflate, and zstdandard file variants"
 license = "MIT"
