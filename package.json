@@ -1,7 +1,7 @@
 {
   "name": "@ui-perf/build-compression",
-  "version": "2.0.0",
-  "description": "A critical path assertion library powered by rust",
+  "version": "2.0.1",
+  "description": "Rust powered compression for UI builds",
   "keywords": [
     "brotli",
     "build",
@@ -63,16 +63,16 @@
     "@oxc-node/core": "^0.1.0",
     "@taplo/cli": "^0.7.0",
     "@tsconfig/node20": "^20.1.9",
-    "@types/node": "^25.6.0",
+    "@types/node": "^26.2.0",
     "ava": "^8.0.0",
     "emnapi": "^1.5.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.6",
-    "oxfmt": "^0.47.0",
+    "lint-staged": "^17.3.0",
+    "oxfmt": "^0.62.0",
     "oxlint": "^1.14.0",
-    "oxlint-tsgolint": "^0.22.1",
+    "oxlint-tsgolint": "^7.0.2001",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.0"
+    "typescript": "^7.0.2"
   },
   "lint-staged": {
     "*.@(js|ts|tsx|yml|yaml|md|json)": [
